@@ -1,0 +1,46 @@
+import requests
+import json
+
+
+def temp_converter(temp_kelvin, i_convention):
+    if i_convention.upper() == "C":
+        result = int(temp_kelvin - 273.15)
+        o_convention = "celsius"
+        return result
+    elif i_convention.upper() == "F":
+        result = int(round((temp_kelvin - 273.15) * 1.8))
+        o_convention = "fahrenheit"
+        return result
+    else:
+        raise ValueError("Please input proper convention C or F.")
+        quit()
+
+
+
+def cities_weather(list_cities):
+    f = open(r"C:\Users\HEZI LEVI\.PyCharmCE2017.2\config\scratches\cities.txt", "w")
+    for city in cities:
+        api_address = f'http://api.openweathermap.org/data/2.5/forecast?appid=70e488eb4c2c4de0ccadc1095cec8b9c&q={city}'
+        json_data = requests.get(api_address).json()
+        temp_kelvin = json_data['list'][0]['main']['temp']
+        temp = temp_converter(temp_kelvin, 'c')
+        weather = json_data['list'][0]['weather'][0]['description']
+
+        f.write(f'The weather today in {city} is {weather} with temperatures {temp} celsius.\n')
+
+
+
+if __name__ == "__main__":
+
+    ip_url = 'https://api.ipify.org?format=json'
+    ip_data = requests.get(ip_url).json()
+    ip = ip_data['ip']
+
+    ipstack_url = f'http://api.ipstack.com/{ip}?access_key=46d3eb530e6212260642577d1455529a'
+    ipstack_data = requests.get(ipstack_url).json()
+    my_city = ipstack_data['city']
+
+    cities = [my_city, 'London', 'Amsterdam', 'Paris', 'Rome', 'Milano', 'Jerusalem', 'Istanbul', 'Los Angeles',
+              'las vegas', 'Miami']
+
+    cities_weather(cities)
