@@ -1,4 +1,4 @@
-AAAAA
+AAAAAA
 Please write a program that does the following:
 Read an input parameter with a JSON file name (for instance my_list.json)
 The JSON will be in the following format (see below)
