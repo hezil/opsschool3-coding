@@ -1,0 +1,3 @@
+hezi please add your jenkis pipline code here:
+clone this repo (done alrady by jenkis jon - copy to the job workspace)
+and run each python script (form this clone) via jenkins slave shell
