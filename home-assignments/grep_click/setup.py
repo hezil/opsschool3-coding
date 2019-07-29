@@ -13,3 +13,4 @@ setup(
         grep_click=grep_click:cli
     ''',
 )
+
