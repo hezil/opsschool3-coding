@@ -5,7 +5,7 @@ import sys
 @click.command()
 @click.option('--city', default = "tel aviv", show_default=True, help="wellcome to forecast station!! insert city name. "
                                                    "multi string city name should be srounded with: \"\" ")
-@click.option('--forcast', default = 0, show_default=True,
+@click.option('--forecast', default = 0, show_default=True,
               help="Forecast availble for next 4 days, please insert 0-4")
 @click.option('-c', 'i_convention', flag_value='c',
               default=True, help="insert \"f\" to persent in fahrenheit or \"c\" to persent in celsius")
