@@ -11,16 +11,16 @@ import sys
               default=True, help="insert \"f\" to persent in fahrenheit or \"c\" to persent in celsius")
 @click.option('-f', 'i_convention', flag_value='f', help="insert \"f\" to persent in fahrenheit or \"c\" to persent in celsius")
 
-def cli(city, forcast, i_convention):
+def cli(city, forecast, i_convention):
     api_address = 'http://api.openweathermap.org/data/2.5/forecast?appid=70e488eb4c2c4de0ccadc1095cec8b9c&q='
     url = api_address + str(city)
     json_data = requests.get(url).json()
 
-    if forcast >= 5:
+    if forecast >= 5:
         raise ValueError("The forecast for the next days can be in range on 1-4")
         quit()
 
-    if forcast >= 1:
+    if forecast >= 1:
         start_day = 1
 
     current_day = 0
@@ -28,7 +28,7 @@ def cli(city, forcast, i_convention):
     current_inc = 0
     full_day_temp = []
     try:
-        for day in range(start_day, forcast + 1):
+        for day in range(start_day, forecast + 1):
             while json_data['list'][current_day]['dt_txt'][: -9] == json_data['list'][current_inc]['dt_txt'][: -9]:
                 current_inc += 1
                 temp_kelvin = json_data['list'][current_inc]['main']['temp']
