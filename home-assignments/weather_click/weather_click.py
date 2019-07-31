@@ -7,8 +7,9 @@ import sys
                                                    "multi string city name should be srounded with: \"\" ")
 @click.option('--forcast', default = 0, show_default=True,
               help="Forecast availble for next 4 days, please insert 0-4")
-@click.option('--i_convention', default = "c", show_default=True,
-              help="insert \"f\" to persent in fahrenheit or \"c\" to persent in celsius")
+@click.option('-c', 'i_convention', flag_value='c',
+              default=True, help="insert \"f\" to persent in fahrenheit or \"c\" to persent in celsius")
+@click.option('-f', 'i_convention', flag_value='f', help="insert \"f\" to persent in fahrenheit or \"c\" to persent in celsius")
 
 def cli(city, forcast, i_convention):
     api_address = 'http://api.openweathermap.org/data/2.5/forecast?appid=70e488eb4c2c4de0ccadc1095cec8b9c&q='
