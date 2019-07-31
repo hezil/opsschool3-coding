@@ -13,7 +13,7 @@ Usage:
     
     weather_click --city "tel aviv"
     
-    weather_click --city rome --forecast 4 --i_convention f
+    weather_click --city rome --forecast 4 -f
   
 Referances to Click Python package:
 
