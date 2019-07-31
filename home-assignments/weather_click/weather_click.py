@@ -5,21 +5,21 @@ import sys
 @click.command()
 @click.option('--city', default = "tel aviv", help="wellcome to forecast station!! insert city name. "
                                                    "multi string city name should be srounded with: \"\" ")
-@click.option('--plus_days', default = 0,
+@click.option('--forcast', default = 0,
               help="Forecast availble for next 4 days, please insert 0-4")
 @click.option('--i_convention', default = "c",
               help="insert \"f\" to persent in fahrenheit or \"c\" to persent in celsius")
 
-def cli(city, plus_days, i_convention):
+def cli(city, forcast, i_convention):
     api_address = 'http://api.openweathermap.org/data/2.5/forecast?appid=70e488eb4c2c4de0ccadc1095cec8b9c&q='
     url = api_address + str(city)
     json_data = requests.get(url).json()
 
-    if plus_days >= 5:
+    if forcast >= 5:
         raise ValueError("The forecast for the next days can be in range on 1-4")
         quit()
 
-    if plus_days >= 1:
+    if forcast >= 1:
         start_day = 1
 
     current_day = 0
@@ -27,7 +27,7 @@ def cli(city, plus_days, i_convention):
     current_inc = 0
     full_day_temp = []
     try:
-        for day in range(start_day, plus_days + 1):
+        for day in range(start_day, forcast + 1):
             while json_data['list'][current_day]['dt_txt'][: -9] == json_data['list'][current_inc]['dt_txt'][: -9]:
                 current_inc += 1
                 temp_kelvin = json_data['list'][current_inc]['main']['temp']
