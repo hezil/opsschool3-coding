@@ -7,6 +7,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'click',
+        #'sys',
         'requests',
     ],
     entry_points='''
