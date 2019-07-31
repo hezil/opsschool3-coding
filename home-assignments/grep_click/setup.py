@@ -7,10 +7,13 @@ setup(
     include_package_data=True,
     install_requires=[
         'click',
+        #'shlex',
+        #'subprocess',
+        'pathlib',
+
     ],
     entry_points='''
         [console_scripts]
         grep_click=grep_click:cli
     ''',
 )
-
