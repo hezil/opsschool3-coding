@@ -1,6 +1,6 @@
-$ grep_weather
+$ weather_click
 
-  grep_weather application 
+  Weather_click application 
   collect for you forcast up to the next 4 days
   for any city you wish for.
 
