@@ -17,7 +17,7 @@ def cli(city, forecast, i_convention):
     json_data = requests.get(url).json()
 
     if json_data == {'cod': '404', 'message': 'city not found'}:
-        raise ValueError("invalid city")
+        raise ValueError("city not found")
         quit()
 
     if forecast >= 5 or forecast < 0:
