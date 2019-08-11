@@ -6,7 +6,7 @@ import sys
 @click.option('--city', default = "tel aviv", show_default=True, help="wellcome to forecast station!! insert city name. "
                                                    "multi string city name should be srounded with: \"\" ")
 @click.option('--forecast', default = 0, show_default=True,
-              help="Forecast availble for next 4 days, please insert 1-4")
+              help="Forecast availble for next 4 days, please insert 0-4")
 @click.option('-c', 'i_convention', flag_value='c',
               default=True, help="insert \"-c\" to persent in celsius")
 @click.option('-f', 'i_convention', flag_value='f', help="insert \"-f\" to persent in fahrenheit")
@@ -20,8 +20,8 @@ def cli(city, forecast, i_convention):
         raise ValueError("city not found")
         quit()
 
-    if forecast >= 5 or forecast < 0:
-        raise ValueError("The forecast for the next days can be in range on 1-4")
+    if forecast > 4 or forecast < 0:
+        raise ValueError("The forecast for the next days can be in range on 0-4")
         quit()
 
     current_day = 0
