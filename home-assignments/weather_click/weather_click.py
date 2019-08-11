@@ -57,9 +57,6 @@ def temp_convention(i_convention):
     elif i_convention.upper() == "F":
         o_convention = "fahrenheit"
         return o_convention
-    else:
-        raise ValueError("Please input proper convention C or F.")
-        quit()
 
 def temp_converter(temp_kelvin, convention):
     if convention == "celsius":
