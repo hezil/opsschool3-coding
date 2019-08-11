@@ -15,7 +15,7 @@ Usage:
     
     weather_click --city rome --forecast 4 -f
     
-    weather_click  --city "london,US" --forecast 2 -c
+    weather_click --city "london,US" --forecast 2 -c
   
 Referances to Click Python package:
 
