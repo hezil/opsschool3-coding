@@ -16,42 +16,32 @@ def cli(city, forecast, i_convention):
     url = api_address + str(city)
     json_data = requests.get(url).json()
 
+    if json_data == {'cod': '404', 'message': 'city not found'}:
+        raise ValueError("invalid city")
+        quit()
+
     if forecast >= 5:
         raise ValueError("The forecast for the next days can be in range on 1-4")
         quit()
 
-    if forecast >= 1:
-        start_day = 1
-
-    current_day = 0
     start_day = 0
-    current_inc = 0
     full_day_temp = []
-    try:
-        for day in range(start_day, forecast + 1):
-            while json_data['list'][current_day]['dt_txt'][: -9] == json_data['list'][current_inc]['dt_txt'][: -9]:
-                current_inc += 1
-                temp_kelvin = json_data['list'][current_inc]['main']['temp']
-                full_day_temp.append(temp_kelvin)
-            weather = json_data['list'][current_inc]['weather'][0]['description']
-            convention = temp_convention(i_convention)
-            temp_min = min(full_day_temp)
-            temp_min = temp_converter(temp_min, convention)
-            temp_max = max(full_day_temp)
-            temp_max = temp_converter(temp_max, convention)
-            date = json_data['list'][current_day]['dt_txt'][:-9]
-            current_day = len(full_day_temp)
-            current_inc = current_day
+    for day in range(start_day, forecast + 1):
+        temp_kelvin = json_data['list'][day]['main']['temp']
+        full_day_temp.append(temp_kelvin)
+        weather = json_data['list'][day]['weather'][0]['description']
+        convention = temp_convention(i_convention)
+        temp_min = min(full_day_temp)
+        temp_min = temp_converter(temp_min, convention)
+        temp_max = max(full_day_temp)
+        temp_max = temp_converter(temp_max, convention)
+        date = json_data['list'][start_day]['dt_txt'][:-9]
 
-            if day == 0:
-                print(
-                    f'The weather today in {city} is {weather} with temperatures trailing from {temp_min}-{temp_max} {convention}.')
-            elif day > 0 and day < 5:
-                print(f'{date} {weather} with temperatures trailing from {temp_min}-{temp_max} {convention}.')
-
-    except:
-        print('The name of the "city" are not valid')
-
+        if day == 0:
+            print(
+                f'The weather today in {city} is {weather} with temperatures trailing from {temp_min}-{temp_max} {convention}.')
+        elif day > 0 and day < 5:
+            print(f'{date} {weather} with temperatures trailing from {temp_min}-{temp_max} {convention}.')
 
 def temp_convention(i_convention):
     if i_convention.upper() == "C":
