@@ -33,9 +33,11 @@ def cli(input, grep, color, underline):
 
 def print_match_lines(output, grep, color, underline):
     output = iter(output.splitlines())
+    line_num = 0
     for i in output:
+        line_num += 1
         if greps(i, grep, color, underline) != None:
-            print(greps(i, grep, color, underline))
+            print(f'line {line_num} {greps(i, grep, color, underline)}')
 
 def greps(word, find, color, underline):
     for x in range(len(word) - len(find) + 1):
