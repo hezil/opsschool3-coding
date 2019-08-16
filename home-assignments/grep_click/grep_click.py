@@ -37,8 +37,8 @@ def print_match_lines(output, grep, color, underline):
     line_num = 0
     for i in output:
         line_num += 1
-        if grep in greps(i, grep, color, underline):
-            print(f'line:{line_num} start_positon:{start_pos(i, grep)} matched_text:{greps(i, grep, color, underline)}')
+        if grep in match(i, grep, color, underline):
+            print(f'line:{line_num} start_positon:{start_pos(i, grep)} matched_text:{multi_match(i, grep, color, underline)}')
             # print(f'i is {i} and grep is {grep}')
             # print(greps(i, grep, color, underline))
             # greps(i, grep, color, underline)
@@ -55,7 +55,7 @@ def print_match_lines(output, grep, color, underline):
 #                 return word
 
 
-def greps(word, find, color, underline):
+def match(word, find, color, underline):
     # print(f'find is {find} type {type(find)} and word is {word} type {type(word)}')
     return re.sub(find, style(find, color, underline), word)
 
@@ -68,32 +68,54 @@ def start_pos(word, find):
     return pos.start()
 
 
+def multi_match(word, find, color, underline):
+    finds = list(dict.fromkeys(re.findall(find, word)))
+    w = word
+    for f in finds:
+        w = match(w, f, color, underline)
+    return w
+
 
 # import click
-# import re 
-
+# import re
+#
 # color = 'red'
 # underline = True
-# word = 'hello old freind old33 man4 old1 school2'
+# word = 'hello old freind shcoool7 old5 school2'
 # find = '[0-9]{1}'
-
+# # find = 'old'
+#
 # def greps(word, find, color, underline):
-#     print(find)
-#     print(word)
-#     x = re.findall(find, word)
-#     print(x)
-#     for i in x:
-#         print(i)
-#     return re.sub(find, style(i, color, underline), word)
-
+#     return re.sub(find, style(find, color, underline), word)
+#
 # def style(txt, color, underline):
 #        return click.style(f'{txt}', fg=color, underline=underline)
-
+#
 # def start_pos(word, find):
 #     pos = re.search(find, word)
-#     return pos.start()        
+#     return pos.start()
+#
+#
+# finds = list(dict.fromkeys(re.findall(find, word)))
+#
+# w = word
+# for f in finds:
+#     w = greps(w, f, color, underline)
+#
+# print(f'start_pos: {start_pos(word, find)} matched_text: {w}')
 
-# print(f'start_pos: {start_pos(word, find)} matched_text: {greps(word, find, color, underline)}')
+
+# def greps(word, find, color, underline):
+#         # print(find)
+#         for x in range(len(word) - len(find) + 1):
+#             if find[0] == word[x]:
+#                 for i in range(len(find)):
+#                     if find[i] != word[x + i]:
+#                         break
+#                 else:
+#                     if i + 1 == len(find):
+#                         word = word.replace(word[x + i - len(find) + 1:x + i + 1],style(word[x + i - len(find) + 1:x + i + 1], color, underline))
+#         return word
 
 
 
