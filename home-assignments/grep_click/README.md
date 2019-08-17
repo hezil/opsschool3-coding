@@ -14,6 +14,12 @@ Usage:
     grep_click -m file.txt -c blue -u cat file.txt
     
     grep_click -m 'hello my friend' cat file1.txt file2.txt file3.txt
+    
+   $ regex example:
+   
+     grep_click -m [0-9]{1} -c blue -u cat file.txt
+    
+    
   
 Referances to Click Python package:
 
