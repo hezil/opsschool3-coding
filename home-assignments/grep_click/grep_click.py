@@ -21,7 +21,7 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
               help="add text underline")
 @pass_config
 def cli(config, machine, color, underline):
-    ''' this application albe to search and display pattern matches in file/s or in stdin'''
+    ''' sreach_matches application simply search and display pattern matches in file/s or stdin'''
     config.machine = machine
     config.color = color
     config.underline = underline
