@@ -9,11 +9,11 @@ Usage:
   
   $ examples:
   
-    grep_click --input 'ls -a' --grep file.txt
+    grep_click --machine file.txt --color green --underline stdin 'ls -a'
     
-    grep_click -i history -g file.txt
+    grep_click -m file.txt -c blue -u cat file.txt
     
-    grep_click -i 'cat file.txt' -g 'hello my friend'
+    grep_click -m 'hello my friend' cat file1.txt file2.txt file3.txt
   
 Referances to Click Python package:
 
