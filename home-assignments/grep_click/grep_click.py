@@ -11,7 +11,7 @@ class Config(object):
 pass_config = click.make_pass_decorator(Config, ensure=True)
 
 @click.group()
-@click.option('--grep', '-g', default='py',
+@click.option('--machine', '-m', default='py',
               help="Type any key word you wonna find,\n"
                                                 "A multiple strig should be in quotation marks example: 'find me'")
 @click.option('--color', '-c', default='red',
@@ -20,8 +20,8 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 @click.option('--underline', '-u', is_flag=True,
               help="add text underline")
 @pass_config
-def cli(config, grep, color, underline):
-    config.grep = grep
+def cli(config, machine, color, underline):
+    config.machine = machine
     config.color = color
     config.underline = underline
 
@@ -52,12 +52,12 @@ def stdin(config, input):
         with open(home + '/.bash_history', 'r') as file:
             output = file.read()
         input = None
-        print_match_lines(input, output, config.grep, config.color, config.underline)
+        print_match_lines(input, output, config.machine, config.color, config.underline)
     else:
         input = shlex.split(input)
         output = subprocess.check_output(input).decode('ascii')
         input = None
-        print_match_lines(input, output, config.grep, config.color, config.underline)
+        print_match_lines(input, output, config.machine, config.color, config.underline)
 
 @cli.command()
 @click.argument('input', type=click.File('r'), nargs=-1)
@@ -81,16 +81,20 @@ def cat(config, input):
             output = f.read()
             if not output:
                 break
-            print_match_lines(f, output, config.grep, config.color, config.underline)
+            print_match_lines(f, output, config.machine, config.color, config.underline)
 
 
-def print_match_lines(input, output, grep, color, underline):
+def print_match_lines(input, output, machine, color, underline):
     output = iter(output.splitlines())
     line_num = 0
+    num_of_matches = 0
     for i in output:
         line_num += 1
-        if grep in match(i, grep, color, underline):
-            in_file(input, line_num, i, grep, color, underline)
+        if machine in match(i, machine, color, underline):
+            num_of_matches += 1
+            print_convention(input, line_num, i, machine, color, underline)
+    if num_of_matches == 0:
+        print('No matches found')
 
 def match(word, find, color, underline):
     return re.sub(find, style(find, color, underline), word)
@@ -109,9 +113,9 @@ def multi_match(word, find, color, underline):
         w = match(w, f, color, underline)
     return w
 
-def in_file(input, line_num, word, find, color, underline):
+def print_convention(input, line_num, word, find, color, underline):
     if input is None:
-        print(f'line:{line_num} start_positon:{start_pos(word, find)} matched_text:{multi_match(word, find, color, underline)}')
+        print(f'line:{line_num} start_positon:{start_pos(word, find)} matched_text:{multi_match(word, find, color, underline)}') # stdin convention
     else:
         filename, file_extension = os.path.splitext(input.name)
-        print(f'format:{file_extension} file_name:{filename} line:{line_num} start_positon:{start_pos(word, find)} matched_text:{multi_match(word, find, color, underline)}')
+        print(f'format:{file_extension} file_name:{filename} line:{line_num} start_positon:{start_pos(word, find)} matched_text:{multi_match(word, find, color, underline)}') # file convention
