@@ -11,18 +11,23 @@ class Config(object):
 pass_config = click.make_pass_decorator(Config, ensure=True)
 
 @click.group()
-@click.option('--machine', '-m',
-              help="Type any key word you wonna find,\n"
-                                                "A multiple strig should be in quotation marks example: 'find me'")
+@click.option('--regex', '-r',
+              help="inset search keyword/regex pattern,\n"
+                   "A multiple strig should be in quotation marks,\n"
+                   "example: 'find me'")
 @click.option('--color', '-c', default='red',
-              help="insert color")
+              help="choose matched text color")
 
 @click.option('--underline', '-u', is_flag=True,
-              help="add text underline")
+              help="add underline to the matched text")
 @pass_config
-def cli(config, machine, color, underline):
-    ''' sreach_matches application simply search and display pattern matches in file/s or stdin'''
-    config.machine = machine
+def cli(config, regex, color, underline):
+    '''
+    \b
+    info: sreach_matches application simply search
+    and display pattern matches in file/s or stdout'''
+
+    config.regex = regex
     config.color = color
     config.underline = underline
 
@@ -53,12 +58,12 @@ def stdin(config, input):
         with open(home + '/.bash_history', 'r') as file:
             output = file.read()
         input = None
-        print_match_lines(input, output, config.machine, config.color, config.underline)
+        print_match_lines(input, output, config.regex, config.color, config.underline)
     else:
         input = shlex.split(input)
         output = subprocess.check_output(input).decode('ascii')
         input = None
-        print_match_lines(input, output, config.machine, config.color, config.underline)
+        print_match_lines(input, output, config.regex, config.color, config.underline)
 
 @cli.command()
 @click.argument('input', type=click.File('r'), nargs=-1)
@@ -82,18 +87,18 @@ def cat(config, input):
             output = f.read()
             if not output:
                 break
-            print_match_lines(f, output, config.machine, config.color, config.underline)
+            print_match_lines(f, output, config.regex, config.color, config.underline)
 
 
-def print_match_lines(input, output, machine, color, underline):
+def print_match_lines(input, output, regex, color, underline):
     output = iter(output.splitlines())
     line_num = 0
     num_of_matches = 0
     for i in output:
         line_num += 1
-        if machine in mark_matches(i, machine, color, underline):
+        if regex in mark_matches(i, regex, color, underline):
             num_of_matches += 1
-            print_convention(input, line_num, i, machine, color, underline)
+            print_convention(input, line_num, i, regex, color, underline)
     if num_of_matches == 0:
         print('No matches found')
 
@@ -116,7 +121,9 @@ def mark_multi_matches(word, find, color, underline): # handle regex pattern
 
 def print_convention(input, line_num, word, find, color, underline):
     if input is None:
-        print(f'line:{line_num} start_positon:{start_pos(word, find)} matched_text:{mark_multi_matches(word, find, color, underline)}') # stdin convention
+        print(f'line:{line_num} start_positon:{start_pos(word, find)} '
+              f'matched_text:{mark_multi_matches(word, find, color, underline)}') # stdin convention
     else:
         filename, file_extension = os.path.splitext(input.name)
-        print(f'format:{file_extension} file_name:{filename} line:{line_num} start_positon:{start_pos(word, find)} matched_text:{mark_multi_matches(word, find, color, underline)}') # file convention
+        print(f'format:{file_extension} file_name:{filename} line:{line_num} start_positon:{start_pos(word, find)} '
+              f'matched_text:{mark_multi_matches(word, find, color, underline)}') # file convention
