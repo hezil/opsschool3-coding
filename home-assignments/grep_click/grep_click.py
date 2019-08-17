@@ -11,7 +11,7 @@ class Config(object):
 pass_config = click.make_pass_decorator(Config, ensure=True)
 
 @click.group()
-@click.option('--machine', '-m', default='py',
+@click.option('--machine', '-m',
               help="Type any key word you wonna find,\n"
                                                 "A multiple strig should be in quotation marks example: 'find me'")
 @click.option('--color', '-c', default='red',
@@ -90,32 +90,32 @@ def print_match_lines(input, output, machine, color, underline):
     num_of_matches = 0
     for i in output:
         line_num += 1
-        if machine in match(i, machine, color, underline):
+        if machine in mark_matches(i, machine, color, underline):
             num_of_matches += 1
             print_convention(input, line_num, i, machine, color, underline)
     if num_of_matches == 0:
         print('No matches found')
 
-def match(word, find, color, underline):
-    return re.sub(find, style(find, color, underline), word)
+def mark_matches(word, find, color, underline):
+    return re.sub(find, text_style(find, color, underline), word)
 
-def style(txt, color, underline):
+def text_style(txt, color, underline):
     return click.style(f'{txt}', fg=color, underline=underline)
 
 def start_pos(word, find):
     pos = re.search(find, word)
     return pos.start()
 
-def multi_match(word, find, color, underline):
+def mark_multi_matches(word, find, color, underline): # handle regex pattern
     finds = list(dict.fromkeys(re.findall(find, word)))
     w = word
     for f in finds:
-        w = match(w, f, color, underline)
+        w = mark_matches(w, f, color, underline)
     return w
 
 def print_convention(input, line_num, word, find, color, underline):
     if input is None:
-        print(f'line:{line_num} start_positon:{start_pos(word, find)} matched_text:{multi_match(word, find, color, underline)}') # stdin convention
+        print(f'line:{line_num} start_positon:{start_pos(word, find)} matched_text:{mark_multi_matches(word, find, color, underline)}') # stdin convention
     else:
         filename, file_extension = os.path.splitext(input.name)
-        print(f'format:{file_extension} file_name:{filename} line:{line_num} start_positon:{start_pos(word, find)} matched_text:{multi_match(word, find, color, underline)}') # file convention
+        print(f'format:{file_extension} file_name:{filename} line:{line_num} start_positon:{start_pos(word, find)} matched_text:{mark_multi_matches(word, find, color, underline)}') # file convention
