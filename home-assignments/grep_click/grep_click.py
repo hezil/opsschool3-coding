@@ -4,10 +4,19 @@ import shlex
 import subprocess
 from pathlib import Path
 
-@click.command()
-@click.option('--input', '-i', default='ls -a',
-              help="Type stdin linux shell command,\n"
-                                                     "A command with multiple parameters should be in quotation marks, example: 'ls -a'")
+class Config(object):
+    pass
+    # def __init__(self):
+    #     self.grep = grep
+    #     self.color = color
+    #     self.underline = underline
+    #     self.verbose = False
+
+pass_config = click.make_pass_decorator(Config, ensure=True)
+
+@click.group()
+# @click.option('--verbose', is_flag=True)
+# @click.option('--home-directory', type=click.Path())
 @click.option('--grep', '-g', default='py',
               help="Type any key word you wonna find,\n"
                                                 "A multiple strig should be in quotation marks example: 'find me'")
@@ -16,21 +25,86 @@ from pathlib import Path
 
 @click.option('--underline', is_flag=True,
               help="add text underline")
+@pass_config
+# def cli(config, verbose, home_directory):
+def cli(config, grep, color, underline):
+    # pass
+    config.grep = grep
+    config.color = color
+    config.underline = underline
 
-def cli(input, grep, color, underline):
-        if input == 'history':
-                home = str(Path.home())
-                with open(home + '/.bash_history', 'r') as file:
-                        output = file.read()
-                print_match_lines(output, grep, color,underline)
-        else:
-            try:
-                input = shlex.split(input)
-                output = subprocess.check_output(input).decode('ascii')
-                print_match_lines(output, grep, color, underline)
-            except:
-                # This will check for any exception and then execute this print statement
-                print("Error: Could not find file or read data")
+    # if verbose:
+    #     click.echo('we are in verbose mode')
+
+    # config.verbose = verbose
+    # if home_directory is None:
+    #     home_directory = '.'
+    # config.home_directory = home_directory
+
+
+@cli.command()
+@click.option('--input', '-i', default='ls -a',
+              help="Type stdin linux shell command,\n"
+                                                     "A command with multiple parameters should be in quotation marks, example: 'ls -a'")
+@pass_config
+def stdin(config, input):
+    # if config.verbose:
+    #     click.echo('we are in verbose')
+    # click.echo(f'Home directory is {config.home_directory}')
+
+    if input == 'history':
+        home = str(Path.home())
+        with open(home + '/.bash_history', 'r') as file:
+            output = file.read()
+            # print(type(output))
+            # print(output)
+        print_match_lines(output, config.grep, config.color, config.underline)
+    else:
+        input = shlex.split(input)
+        output = subprocess.check_output(input).decode('ascii')
+        print_match_lines(output, config.grep, config.color, config.underline)
+    # else:
+    #     try:
+    #         input = shlex.split(input)
+    #         output = subprocess.check_output(input).decode('ascii')
+    #         print_match_lines(output, grep, color, underline)
+    #     except:
+    #         # This will check for any exception and then execute this print statement
+    #         print("Error: Could not find file or read data")
+
+
+@cli.command()
+@click.argument('input', type=click.File('r'), nargs=-1)
+# @click.argument('output', type=click.File('wb'))
+@pass_config
+def files(config, input):
+    """This script works similar to the Unix `cat` command but it writes
+    into a specific file (which could be the standard output as denoted by
+    the ``-`` sign).
+    \b
+    Copy stdin to stdout:
+        inout - -
+    \b
+    Copy foo.txt and bar.txt to stdout:
+        inout foo.txt bar.txt -
+    \b
+    Write stdin into the file foo.txt
+        inout - foo.txt
+    """
+    for f in input:
+        while True:
+            output = f.read()
+            if not output:
+                break
+            # output.write(chunk)
+            # output.flush()
+            # print(output)
+            # output = output.decode('ascii')
+            # print(type(output))
+            # print(output)
+            print_match_lines(output, config.grep, config.color, config.underline)
+
+
 
 def print_match_lines(output, grep, color, underline):
     output = iter(output.splitlines())
