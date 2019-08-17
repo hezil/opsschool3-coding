@@ -21,6 +21,7 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
               help="add text underline")
 @pass_config
 def cli(config, machine, color, underline):
+    ''' this application simply do what grep funcation does in Linux'''
     config.machine = machine
     config.color = color
     config.underline = underline
@@ -30,7 +31,7 @@ def cli(config, machine, color, underline):
 @pass_config
 def stdin(config, input):
     """
-    this command accept stdin and print stdout e.g. shell commands
+    this command accept stdin same as in shell command line
 
     examples:
 
